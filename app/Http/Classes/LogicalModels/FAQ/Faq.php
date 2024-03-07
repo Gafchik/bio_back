@@ -34,18 +34,18 @@ class Faq
                     $faq_category_translations,
                     function($trans) use ($category,$lang) {
                         return $category['id'] === $trans['faq_category_id']
-                            && $trans['locale'] === Lang::toOldLocale($lang);
+                            && $trans['locale'] === $lang;
                     }
                 );
                 if(!empty($allTranslate)){
-                    $result[$lang]['category'][] = $allTranslate;
+                    $result[$lang]['category'][] = array_shift($allTranslate);
                 }
             }
             foreach ($faqs as $item){
                 foreach ($faq_translations as $trans){
                     if(
                         $item['id'] === $trans['faq_id']
-                        && $trans['locale'] === Lang::toOldLocale($lang)
+                        && $trans['locale'] === $lang
                     ){
                         $result[$lang]['faq'][] = [
                             'faq_category_id' => $item['faq_category_id'],
