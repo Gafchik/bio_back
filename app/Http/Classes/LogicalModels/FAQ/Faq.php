@@ -38,7 +38,7 @@ class Faq
                     }
                 );
                 if(!empty($allTranslate)){
-                    $result[$lang]['category'][] = array_shift($allTranslate);
+                    $result[$lang]['category'][] = [...$category,...array_shift($allTranslate)];
                 }
             }
             foreach ($faqs as $item){
@@ -49,6 +49,7 @@ class Faq
                     ){
                         $result[$lang]['faq'][] = [
                             'faq_category_id' => $item['faq_category_id'],
+                            'position' => $item['position'],
                             ...$trans
                         ];
                     }
