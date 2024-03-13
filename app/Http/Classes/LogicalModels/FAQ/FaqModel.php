@@ -22,9 +22,9 @@ class FaqModel
     public function getFaq(): array
     {
         return [
-            'faqs' => $this->faq->get()->toArray(),
+            'faqs' => $this->faq->where('status','=',true)->get()->toArray(),
             'faq_translations' => $this->faq_translations->get()->toArray(),
-            'faq_category' => $this->faq_category->get()->toArray(),
+            'faq_category' => $this->faq_category->where('status','=',true)->get()->toArray(),
             'faq_category_translations' => $this->faq_category_translations->get()->toArray(),
         ];
     }
