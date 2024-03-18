@@ -18,6 +18,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::middleware(['throttle:60,1'])->group(function () {
     include 'Pages/FAQ/faq.php';
+    include 'Pages/Contacts/contacts.php';
 });
 
 
