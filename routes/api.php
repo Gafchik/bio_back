@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 /*
@@ -20,6 +21,8 @@ Route::middleware(['throttle:60,1'])->group(function () {
     include 'Pages/FAQ/faq.php';
     include 'Pages/Contacts/contacts.php';
     include 'Pages/BaseOnlyTextPages/base-only-text-pages.php';
+    include 'Pages/News/news.php';
 });
 
 
+Route::post('/test', [TestController::class, 'test']);
