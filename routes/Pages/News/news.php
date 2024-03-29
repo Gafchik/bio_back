@@ -10,5 +10,7 @@ Route::group(
     ],
     function () {
         Route::post('/get-cards', [NewsController::class, 'getCards']);
+        Route::post('/get-cards-details', [NewsController::class, 'getCardsDetails']);
+        Route::post('/add-view', [NewsController::class, 'addView']);
     }
 );

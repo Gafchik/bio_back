@@ -68,4 +68,50 @@ class NewsModel
             ->whereRaw('news_id = id_card')
             ->select([$filed]);
     }
+    public function getCardsDetails(int $id): ?array
+    {
+        $nameRu = $this->getSubQuery(Lang::RUS,'name');
+        $nameUk = $this->getSubQuery(Lang::UKR,'name');
+        $nameEn = $this->getSubQuery(Lang::ENG,'name');
+        $nameGe = $this->getSubQuery(Lang::GEO,'name');
+
+        $contentRu = $this->getSubQuery(Lang::RUS,'content');
+        $contentUk = $this->getSubQuery(Lang::UKR,'content');
+        $contentEn = $this->getSubQuery(Lang::ENG,'content');
+        $contentGe = $this->getSubQuery(Lang::GEO,'content');
+
+        return $this->news->select([
+            'id as id_card',
+            'image',
+            'view_count',
+            'date',
+            'created_at',
+        ])
+            ->selectRaw("({$nameRu->toSql()}) as name_ru")
+            ->mergeBindings($nameRu->getQuery())
+            ->selectRaw("({$nameUk->toSql()}) as name_uk")
+            ->mergeBindings($nameUk->getQuery())
+            ->selectRaw("({$nameEn->toSql()}) as name_en")
+            ->mergeBindings($nameEn->getQuery())
+            ->selectRaw("({$nameGe->toSql()}) as name_ge")
+            ->mergeBindings($nameGe->getQuery())
+            ->selectRaw("({$contentRu->toSql()}) as content_ru")
+            ->mergeBindings($contentRu->getQuery())
+            ->selectRaw("({$contentUk->toSql()}) as content_uk")
+            ->mergeBindings($contentUk->getQuery())
+            ->selectRaw("({$contentEn->toSql()}) as content_en")
+            ->mergeBindings($contentEn->getQuery())
+            ->selectRaw("({$contentGe->toSql()}) as content_ge")
+            ->mergeBindings($contentGe->getQuery())
+            ->where('id','=',$id)
+            ->where('status','=',true)
+            ->first()
+            ?->toArray();
+    }
+    public function addView(int $id): void
+    {
+        $this->news
+            ->where('id', $id)
+            ->increment('view_count');
+    }
 }
