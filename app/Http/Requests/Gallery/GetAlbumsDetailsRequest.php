@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\News;
+namespace App\Http\Requests\Gallery;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DetailCardRequest extends FormRequest
+class GetAlbumsDetailsRequest extends FormRequest
 {
     public function rules()
     {
@@ -14,6 +14,10 @@ class DetailCardRequest extends FormRequest
                 'int',
                 'min:1'
             ],
+            'is_image' => [
+                'required',
+                'boolean',
+            ]
         ];
     }
 }

@@ -24,5 +24,6 @@ include 'Pages/FAQ/faq.php';
 include 'Pages/Contacts/contacts.php';
 include 'Pages/BaseOnlyTextPages/base-only-text-pages.php';
 include 'Pages/News/news.php';
+include 'Pages/Gallery/gallery.php';
 
 Route::post('/test', [TestController::class, 'test']);
