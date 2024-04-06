@@ -47,7 +47,7 @@ class GalleryModel
             ->mergeBindings($count->getQuery())
             ->where('status','=',true)
             ->whereNotNull('category_images.category_image')
-            ->orderBy('position')
+            ->orderByDesc('category_images.id')
             ->get()
             ->toArray();
     }
