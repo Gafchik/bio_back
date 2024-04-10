@@ -1,0 +1,21 @@
+<?php
+return [
+    'certificate' => 'Certificate',
+    'owner_tree_text' => 'Ownership of the tree',
+    'bioactive' => 'Bioactive',
+    'who_plant' => 'Planter',
+    'coordinate' => 'Coordinates',
+    'tree' => 'Tree',
+    'user_name' => 'Owner Information',
+    'number' => 'Number',
+    'field' => 'Field',
+    'year_plant' => 'Planting Year, Season',
+    'buy_data' => 'Purchase Date',
+    'cost_1' => 'Tree Cost at the Time of',
+    'cost_2' => 'Certificate Formation',
+    'location' => 'Location (Country, Region)',
+    'create_at' => 'Certificate Generation Date',
+    'status' => 'Tree Status',
+    'who_get' => 'Issued by',
+    'tree_uuid' => 'Tree ID Number',
+];
