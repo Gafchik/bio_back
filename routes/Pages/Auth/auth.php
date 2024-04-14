@@ -19,5 +19,9 @@ Route::group(
     function () {
         Route::post('/check-email', [AuthController::class, 'checkEmail']);
         Route::post('/reg', [AuthController::class, 'reg']);
+        Route::post('/email-activate', [AuthController::class, 'emailActivate']);
+        Route::post('/forgot-password-send-code', [AuthController::class, 'forgotPasswordSendCode']);
+        Route::post('/check-code', [AuthController::class, 'checkForgotCode']);
+        Route::post('/change-password', [AuthController::class, 'changePassword']);
     }
 );

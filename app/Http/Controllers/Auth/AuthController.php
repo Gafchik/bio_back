@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\BaseExceptions\BaseException;
 use App\Http\Classes\LogicalModels\Auth\Auth as AuthModel;
-use App\Http\Classes\MailModels\ActivationMail\ActivationMailModel;
 use App\Http\Controllers\BaseControllers\BaseController;
 use App\Http\Requests\Auth\AuthCheckEmailRequest;
 use App\Http\Requests\Auth\AuthRegRequest;
+use App\Http\Requests\Auth\EmailActivateRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Mail\Mailable;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Request;
 
 class AuthController extends BaseController
 {
     public function __construct(
         private AuthModel $model
-    ){
+    )
+    {
         parent::__construct();
     }
+
     public function checkEmail(AuthCheckEmailRequest $request): JsonResponse
     {
         $data = $request->validated();
@@ -25,11 +27,65 @@ class AuthController extends BaseController
             'email_use' => $this->model->checkEmail($data)
         ]);
     }
+
     public function reg(AuthRegRequest $request): JsonResponse
     {
         $data = $request->validated();
         return $this->makeGoodResponse([
             'is_reg' => $this->model->reg($data)
         ]);
+    }
+
+    public function emailActivate(EmailActivateRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+        try {
+            $this->model->emailActivate($data);
+            return $this->makeGoodResponse([]);
+
+        } catch (BaseException $e) {
+            return $this->makeBadResponse($e);
+        }
+    }
+
+    public function forgotPasswordSendCode(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'email' => ['required', 'email', 'max:255',],
+        ]);
+        $this->model->forgotPasswordSendCode($validated);
+        return $this->makeGoodResponse([]);
+    }
+
+    public function checkForgotCode(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'email' => ['required', 'email', 'max:255',],
+            'code' => ['required', 'string', 'min:6', 'max:6',],
+        ]);
+        try {
+            $this->model->checkForgotCode($validated);
+            return $this->makeGoodResponse([]);
+        } catch (BaseException $e) {
+            return $this->makeBadResponse($e);
+        }
+    }
+    public function changePassword(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'email' => ['required', 'email', 'max:255',],
+            'code' => ['required', 'string', 'min:6', 'max:6',],
+            'password' => [
+                'required',
+                'confirmed',
+                'min:' . config('auth.passwords.min_length'), // 8 length
+            ],
+        ]);
+        try {
+            $this->model->changePassword($validated);
+            return $this->makeGoodResponse([]);
+        } catch (BaseException $e) {
+            return $this->makeBadResponse($e);
+        }
     }
 }

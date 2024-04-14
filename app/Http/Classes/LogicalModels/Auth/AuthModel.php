@@ -134,8 +134,38 @@ class AuthModel
             ]));
     }
 
-    private function createActivationEmailCode(): int
+    public function createActivationEmailCode(): int
     {
         return rand(100000, 999999);
+    }
+    public function getActivationData(string $email): ?array
+    {
+        return $this->users
+            ->from($this->users->getTable(), 'users')
+            ->leftJoin($this->activationsEmail->getTable() . ' as activationsEmail',
+                'activationsEmail.user_id',
+                '=',
+                'users.id',
+            )
+            ->where('users.email', $email)
+            ->where('activationsEmail.completed', 0)
+            ->first()
+            ?->toArray();
+    }
+    public function completeActivation(int $id): void
+    {
+        $this->activationsEmail
+            ->where('id', $id)
+            ->update([
+                'completed' => true,
+            ]);
+    }
+    public function changePassword(array $data): void
+    {
+        $this->users
+            ->where('email', $data['email'])
+            ->update([
+                'password' => $this->generateHash($data['password']),
+            ]);
     }
 }
