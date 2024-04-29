@@ -28,11 +28,12 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
+            dd($e->getMessage(),$e->getFile(),$e->getLine(),$e->getCode(), $e->getTraceAsString());
 //            return ResponseFacade::makeBadResponse(new UnknownException($e->getMessage()));
 //            return ResponseFacade::makeBadResponse([]);
         });
         $this->renderable(function (Throwable $e, $request) {
-//            dd($e->getMessage(),$e->getFile(),$e->getLine(),$e->getCode(), $e->getTraceAsString());
+            dd($e->getMessage(),$e->getFile(),$e->getLine(),$e->getCode(), $e->getTraceAsString());
 //            if($e instanceof UnauthorizedHttpException){
 //                return ResponseFacade::makeBadResponse(new UnauthorizedJWTException($e->getMessage()));
 //            }

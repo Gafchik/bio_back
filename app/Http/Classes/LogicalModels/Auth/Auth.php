@@ -85,4 +85,8 @@ class Auth
         }
         $this->model->changePassword($data);
     }
+    public function getUserInfo(string $email): ?array
+    {
+        return $this->model->getUserInfo($email);
+    }
 }

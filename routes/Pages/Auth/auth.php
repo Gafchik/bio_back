@@ -23,5 +23,7 @@ Route::group(
         Route::post('/forgot-password-send-code', [AuthController::class, 'forgotPasswordSendCode']);
         Route::post('/check-code', [AuthController::class, 'checkForgotCode']);
         Route::post('/change-password', [AuthController::class, 'changePassword']);
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/get-user-info', [AuthController::class, 'getUserInfo']);
     }
 );

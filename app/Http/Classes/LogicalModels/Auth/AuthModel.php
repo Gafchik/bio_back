@@ -168,4 +168,36 @@ class AuthModel
                 'password' => $this->generateHash($data['password']),
             ]);
     }
+    public function getUserInfo(string $email): ?array
+    {
+        return $this->users
+            ->from($this->users->getTable(). ' as userModel')
+            ->leftJoin($this->userInfo->getTable() . ' as userInfo',
+                'userModel.id',
+                '=',
+                'userInfo.user_id'
+            )
+            ->leftJoin($this->userSetting->getTable() . ' as userSetting',
+                'userModel.id',
+                '=',
+                'userSetting.user_id'
+            )
+            ->where('userModel.email',$email)
+            ->select([
+                'userModel.id',
+                'userModel.email',
+                'userSetting.locale',
+                'userModel.permissions',
+                'userModel.is_active_user',
+                'userInfo.first_name',
+                'userInfo.last_name',
+                'userSetting.locale',
+                'userSetting.promocode',
+                'userInfo.level',
+                'userModel.google2fa_secret as secret_key',
+            ])
+            ->selectRaw('!ISNULL(userModel.google2fa_secret) as has_2fa_code')
+            ->first()
+            ?->toArray();
+    }
 }

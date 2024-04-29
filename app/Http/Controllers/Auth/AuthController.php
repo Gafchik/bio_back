@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Exceptions\BaseExceptions\BaseException;
 use App\Http\Classes\LogicalModels\Auth\Auth as AuthModel;
+use App\Http\Classes\LogicalModels\Auth\Exceptions\UnauthorizedException;
 use App\Http\Controllers\BaseControllers\BaseController;
 use App\Http\Requests\Auth\AuthCheckEmailRequest;
 use App\Http\Requests\Auth\AuthRegRequest;
 use App\Http\Requests\Auth\EmailActivateRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends BaseController
 {
@@ -86,6 +88,44 @@ class AuthController extends BaseController
             return $this->makeGoodResponse([]);
         } catch (BaseException $e) {
             return $this->makeBadResponse($e);
+        }
+    }
+    public function login(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'email' => ['required', 'email', 'max:255',],
+            'password' => [
+                'required',
+                'min:' . config('auth.passwords.min_length'), // 8 length
+            ],
+        ]);
+        try {
+            $credentials = $request->only('email', 'password');
+            $token = Auth::attempt($credentials);
+            if(empty($token)){
+                throw new UnauthorizedException();
+            }
+            $user = $this->model->getUserInfo($validated['email']);
+            return $this->makeGoodResponse([
+                'authorization' => [
+                    'token' => $token,
+                    'type' => 'bearer',
+                ],
+                'userInfo' => $user,
+            ]);
+        } catch (BaseException $e) {
+            return $this->makeBadResponse($e);
+        }
+    }
+    public function getUserInfo()
+    {
+        $email = Auth::user()?->email;
+        if(empty($email)){
+            return $this->makeGoodResponse([]);
+        }else{
+            $user = $this->model->getUserInfo($email);
+            unset($user['secret_key']);
+            return $this->makeGoodResponse($user);
         }
     }
 }
