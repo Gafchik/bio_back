@@ -27,5 +27,6 @@ include 'Pages/News/news.php';
 include 'Pages/Gallery/gallery.php';
 include 'Pages/Auth/auth.php';
 include 'Pages/Home/home.php';
+include 'Pages/User/user.php';
 
 Route::post('/test', [TestController::class, 'test']);

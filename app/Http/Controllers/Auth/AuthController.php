@@ -128,4 +128,9 @@ class AuthController extends BaseController
             return $this->makeGoodResponse($user);
         }
     }
+    public function logout(): JsonResponse
+    {
+        Auth::logout();
+        return $this->makeGoodResponse([]);
+    }
 }
