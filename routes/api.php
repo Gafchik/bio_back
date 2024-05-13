@@ -28,5 +28,6 @@ include 'Pages/Gallery/gallery.php';
 include 'Pages/Auth/auth.php';
 include 'Pages/Home/home.php';
 include 'Pages/User/user.php';
+include 'Pages/Profile/profile.php';
 
 Route::post('/test', [TestController::class, 'test']);

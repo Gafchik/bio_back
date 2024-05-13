@@ -87,6 +87,10 @@ class Auth
     }
     public function getUserInfo(string $email): ?array
     {
-        return $this->model->getUserInfo($email);
+        $id = $this->model->getUserId($email);
+        if(empty($id)){
+            return null;
+        }
+        return $this->model->getUserInfo($id);
     }
 }

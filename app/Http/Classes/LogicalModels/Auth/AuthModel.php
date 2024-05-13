@@ -2,6 +2,7 @@
 
 namespace App\Http\Classes\LogicalModels\Auth;
 
+use App\Http\Classes\Helpers\PasswordHashHelper;
 use App\Http\Classes\MailModels\ActivationMail\ActivationMailModel;
 use App\Http\Classes\Structure\CDateTime;
 use App\Http\Classes\Structure\CustomHeaders;
@@ -15,6 +16,7 @@ use App\Models\MySql\Biodeposit\{
     User_setting,
     Wallets,
     Activations,
+    Trees,
 };
 use Webpatser\Uuid\Uuid;
 
@@ -26,6 +28,7 @@ class AuthModel
         private User_setting $userSetting,
         private Wallets $wallets,
         private Activations $activationsEmail,
+        private Trees $trees,
     ){}
 
     public function checkEmail(array $data): bool
@@ -50,24 +53,13 @@ class AuthModel
             'uuid' => Uuid::generate()->string,
             'email' => $data['email'],
             'bad_email' => 0,
-            'password' => $this->generateHash($data['password']),
+            'password' => PasswordHashHelper::generatePasswordHash($data['password']),
             'referral_link' => $this->generateReferralLink(),
             'created_at' => CDateTime::getCurrentDate(),
             'updated_at' => CDateTime::getCurrentDate(),
             'enable_2_fact' => 0,
         ];
         return $this->users->insertGetId($usersData);
-    }
-    private function generateHash(string $password): string
-    {
-        // Генерация хеша с указанием стоимости и собственной соли
-        $cost = 10; // Настройте стоимость по вашим потребностям
-        $salt = 'your_unique_salt_here'; // Замените на свою уникальную соль
-
-        return Hash::make($password, [
-            'rounds' => $cost,
-            'salt' => $salt,
-        ]);
     }
     private function generateReferralLink(): string
     {
@@ -165,12 +157,12 @@ class AuthModel
         $this->users
             ->where('email', $data['email'])
             ->update([
-                'password' => $this->generateHash($data['password']),
+                'password' => PasswordHashHelper::generatePasswordHash($data['password']),
             ]);
     }
-    public function getUserInfo(string $email): ?array
+    public function getUserInfo(int $id): ?array
     {
-        return $this->users
+        $result = $this->users
             ->from($this->users->getTable(). ' as userModel')
             ->leftJoin($this->userInfo->getTable() . ' as userInfo',
                 'userModel.id',
@@ -182,7 +174,7 @@ class AuthModel
                 '=',
                 'userSetting.user_id'
             )
-            ->where('userModel.email',$email)
+            ->where('userModel.id',$id)
             ->select([
                 'userModel.id',
                 'userModel.email',
@@ -191,6 +183,7 @@ class AuthModel
                 'userModel.is_active_user',
                 'userInfo.first_name',
                 'userInfo.last_name',
+                'userInfo.phone',
                 'userSetting.locale',
                 'userSetting.promocode',
                 'userInfo.level',
@@ -199,5 +192,33 @@ class AuthModel
             ->selectRaw('!ISNULL(userModel.google2fa_secret) as has_2fa_code')
             ->first()
             ?->toArray();
+        if(!empty($result)){
+            $result = [
+              ...$result,
+              'wallets' => $this->getWallets($id),
+              'count_trees' => $this->getCountTrees($id),
+            ];
+        }
+        return $result;
+    }
+    public function getUserId(string $email): ?int
+    {
+        return $this->users->where('email',$email)->pluck('id')->first();
+    }
+    private function getWallets(int $id): array
+    {
+        return $this->wallets
+            ->where('user_id', $id)
+            ->get([
+                'type',
+                'balance',
+            ])
+            ->toArray();
+    }
+    private function getCountTrees(int $id): int
+    {
+        return $this->trees
+            ->where('user_id',$id)
+            ->count();
     }
 }

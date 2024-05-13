@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        ['middleware' => ['jwt.auth']],
+        'middleware' => ['jwt.auth'],
         'prefix' => 'user',
     ],
     function () {
