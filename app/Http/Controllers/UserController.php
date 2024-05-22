@@ -21,7 +21,7 @@ class UserController extends BaseController
     public function changeLocale(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'lang' => ['required', 'string', 'in:en,ge,ru,ua',],
+            'lang' => ['required', 'string', 'in:en,ge,ru,uk',],
         ]);
         $id = Auth::user()?->id;
         if(empty($id)){

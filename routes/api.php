@@ -30,5 +30,6 @@ include 'Pages/Home/home.php';
 include 'Pages/User/user.php';
 include 'Pages/Profile/profile.php';
 include 'Pages/Personal/personal.php';
+include 'Pages/Common/signed-documents.php';
 
 Route::post('/test', [TestController::class, 'test']);

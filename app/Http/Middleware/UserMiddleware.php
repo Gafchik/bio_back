@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserMiddleware
 {
-    public function handle(Request $request, Closure $next): JsonResponse
+    public function handle(Request $request, Closure $next): JsonResponse | Response
     {
         $email = Auth::user()?->email;
         if(empty($email)){

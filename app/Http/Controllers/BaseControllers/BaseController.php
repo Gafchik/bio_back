@@ -39,4 +39,9 @@ class BaseController extends Controller
         }
         $this->app->setLocale($this->lang);
     }
+    public function makePdfResponse($pdf)
+    {
+        return response($pdf->output())
+            ->header('Content-Type', 'application/pdf');
+    }
 }
