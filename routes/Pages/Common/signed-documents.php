@@ -16,5 +16,6 @@ Route::group(
         Route::get('/get-contract/{treeId}', [SignedDocumentsController::class, 'getContractByUuid']);
         Route::get('/get-act/{treeId}', [SignedDocumentsController::class, 'getActByUuid']);
         Route::post('/signed', [SignedDocumentsController::class, 'signed']);
+        Route::get('/download-certificate/{treeId}', [SignedDocumentsController::class, 'downloadCertificateByUuid']);
     }
 );
