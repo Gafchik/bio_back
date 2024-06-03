@@ -31,5 +31,6 @@ include 'Pages/User/user.php';
 include 'Pages/Profile/profile.php';
 include 'Pages/Personal/personal.php';
 include 'Pages/Common/signed-documents.php';
+include 'Pages/Status/status.php';
 
 Route::post('/test', [TestController::class, 'test']);
