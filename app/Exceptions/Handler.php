@@ -28,7 +28,7 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-//            dd($e->getMessage(),$e->getFile(),$e->getLine(),$e->getCode(), $e->getTraceAsString());
+            dd($e->getMessage(),$e->getFile(),$e->getLine(),$e->getCode(), $e->getTraceAsString());
 //            return ResponseFacade::makeBadResponse(new UnknownException($e->getMessage()));
 //            return ResponseFacade::makeBadResponse([]);
         });
