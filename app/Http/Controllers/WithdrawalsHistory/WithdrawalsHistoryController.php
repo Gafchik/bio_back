@@ -10,7 +10,9 @@ class WithdrawalsHistoryController extends BaseController
 {
     public function __construct(
         private WithdrawalsHistory $model
-    ){}
+    ){
+        parent::__construct();
+    }
 
     public function getWithdrawalsHistory(): JsonResponse
     {

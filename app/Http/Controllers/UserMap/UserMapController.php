@@ -11,7 +11,9 @@ class UserMapController extends BaseController
 {
     public function __construct(
         private UserMap $model
-    ){}
+    ){
+        parent::__construct();
+    }
 
     public function getTrees(): JsonResponse
     {

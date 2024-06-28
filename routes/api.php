@@ -35,5 +35,6 @@ include 'Pages/Status/status.php';
 include 'Pages/Purchases/purchases.php';
 include 'Pages/UserMap/user-map.php';
 include 'Pages/WithdrawalsHistory/withdrawals-history.php';
+include 'Pages/Withdrawals/withdrawals.php';
 
 Route::post('/test', [TestController::class, 'test']);
