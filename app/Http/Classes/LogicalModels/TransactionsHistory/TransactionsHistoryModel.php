@@ -26,6 +26,7 @@ class TransactionsHistoryModel
     {
         return $this->transactions
             ->whereIn('wallet_id', $walletIds)
+            ->orderByDesc('id')
             ->get()
             ->toArray();
     }
