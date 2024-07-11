@@ -117,7 +117,7 @@ class AuthController extends BaseController
             return $this->makeBadResponse($e);
         }
     }
-    public function getUserInfo()
+    public function getUserInfo(): JsonResponse
     {
         $email = Auth::user()?->email;
         if(empty($email)){
@@ -132,5 +132,34 @@ class AuthController extends BaseController
     {
         Auth::logout();
         return $this->makeGoodResponse([]);
+    }
+    public function checkHas2Fa(): JsonResponse
+    {
+        $result = $this->model->checkHas2Fa();
+        return $this->makeGoodResponse($result);
+    }
+    public function enable2Fa(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'code' => ['required', 'string'],
+        ]);
+        try {
+            $this->model->enable2Fa($validated);
+            return $this->makeGoodResponse([]);
+        }catch (BaseException $e){
+            return $this->makeBadResponse($e);
+        }
+    }
+    public function disable2Fa(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'code' => ['required', 'string'],
+        ]);
+        try {
+            $this->model->disable2Fa($validated);
+            return $this->makeGoodResponse([]);
+        }catch (BaseException $e){
+            return $this->makeBadResponse($e);
+        }
     }
 }

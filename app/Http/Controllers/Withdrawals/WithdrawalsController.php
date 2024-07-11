@@ -20,7 +20,7 @@ class WithdrawalsController extends BaseController
     {
         $validated = $request->validate([
             'type' => ['required','integer','in:1,2'],
-            'amount' => ['required','numeric','min:49'],
+            'amount' => ['required','numeric','min:50'],
             'account_number' => ['required','numeric'],
             'full_name' => ['required', 'string'],
             'phone' => ['nullable','string'],

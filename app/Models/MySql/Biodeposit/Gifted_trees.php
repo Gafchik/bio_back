@@ -4,8 +4,8 @@ namespace App\Models\MySql\Biodeposit;
 
 use App\Models\BaseModel;
 
-class RoleUsers extends BaseModel
+class Gifted_trees extends BaseModel
 {
     protected $connection = 'biodeposit';
-    protected $table = 'role_users';
+    protected $table = 'gifted_trees';
 }

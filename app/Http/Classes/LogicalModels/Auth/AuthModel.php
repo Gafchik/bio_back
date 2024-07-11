@@ -8,6 +8,7 @@ use App\Http\Classes\Structure\CDateTime;
 use App\Http\Classes\Structure\CustomHeaders;
 use App\Http\Classes\Structure\Lang;
 use App\Http\Classes\Structure\WalletsType;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Models\MySql\Biodeposit\{
@@ -188,6 +189,7 @@ class AuthModel
                 'userSetting.promocode',
                 'userInfo.level',
                 'userModel.google2fa_secret as secret_key',
+                'userModel.enable_2_fact',
             ])
             ->selectRaw('!ISNULL(userModel.google2fa_secret) as has_2fa_code')
             ->first()
@@ -220,5 +222,21 @@ class AuthModel
         return $this->trees
             ->where('user_id',$id)
             ->count();
+    }
+    public function set2fac(int $userId,string $code2fa): void
+    {
+        $this->users
+            ->where('id',$userId)
+            ->update([
+                'google2fa_secret' => $code2fa
+            ]);
+    }
+    public function change2fac(bool $isEnable)
+    {
+        $this->users
+            ->where('id',Auth::user()?->id)
+            ->update([
+                'enable_2_fact' => $isEnable
+            ]);
     }
 }

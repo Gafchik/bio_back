@@ -8,15 +8,20 @@ use App\Http\Classes\LogicalModels\Auth\Exceptions\IncorrectCodeException;
 use App\Http\Classes\MailModels\ActivationMail\ForgotPasswordMailModel;
 use App\Http\Classes\Traits\CacheTrait;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
+use PragmaRX\Google2FAQRCode\Google2FA;
 
 class Auth
 {
     private const CHANGE_PASSWORD_KEY = 'change_password_key';
     private const TTL_PASSWORD_CODE = 300;
+    private Google2FA $google2fa;
     use CacheTrait;
     public function __construct(
-        private AuthModel $model
-    ){}
+        private AuthModel $model,
+    ){
+        $this->google2fa = new Google2FA();
+    }
     public function checkEmail(array $data): bool
     {
         return $this->model->checkEmail($data);
@@ -92,5 +97,52 @@ class Auth
             return null;
         }
         return $this->model->getUserInfo($id);
+    }
+    public function checkHas2Fa(): array
+    {
+        $user = $this->getUserInfo(FacadesAuth::user()?->email);
+        if(!!$user['enable_2_fact']){
+            return [
+                'enable_2_fact' => true,
+            ];
+        }
+        if(!empty($user['secret_key'])){
+            $code2fa = decrypt($user['secret_key']);
+        }else{
+            $code2fa = $this->google2fa->generateSecretKey();
+            $this->model->set2fac($user['id'],encrypt($code2fa));
+        }
+        $QR_Image =$this->google2fa->getQRCodeInline(
+            config('app.name'),
+            $user['email'],
+            $code2fa
+        );
+        return [
+            'enable_2_fact' => !!$user['enable_2_fact'],
+            'key' => $code2fa,
+            'qr' => $QR_Image,
+        ];
+    }
+    public function enable2Fa(array $data): void
+    {
+        $user = $this->getUserInfo(FacadesAuth::user()?->email);
+        $code = $data['code'];
+        $secretKey = decrypt($user['secret_key']);
+        $isValidKey = $this->google2fa->verifyKey($secretKey,$code);
+        if(!$isValidKey){
+            throw new IncorrectCodeException();
+        }
+        $this->model->change2fac(true);
+    }
+    public function disable2Fa(array $data): void
+    {
+        $user = $this->getUserInfo(FacadesAuth::user()?->email);
+        $code = $data['code'];
+        $secretKey = decrypt($user['secret_key']);
+        $isValidKey = $this->google2fa->verifyKey($secretKey,$code);
+        if(!$isValidKey){
+            throw new IncorrectCodeException();
+        }
+        $this->model->change2fac(false);
     }
 }

@@ -19,5 +19,8 @@ Route::group(
         Route::post('/login', [AuthController::class, 'login']);
         Route::post('/get-user-info', [AuthController::class, 'getUserInfo']);
         Route::post('/logout', [AuthController::class, 'logout'])->middleware(['jwt.auth']);
+        Route::post('/check-has-2-fa', [AuthController::class, 'checkHas2Fa'])->middleware(['jwt.auth']);
+        Route::post('/enable-has-2-fa', [AuthController::class, 'enable2Fa'])->middleware(['jwt.auth']);
+        Route::post('/disable-has-2-fa', [AuthController::class, 'disable2Fa'])->middleware(['jwt.auth']);
     }
 );
