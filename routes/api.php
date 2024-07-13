@@ -38,5 +38,6 @@ include 'Pages/WithdrawalsHistory/withdrawals-history.php';
 include 'Pages/Withdrawals/withdrawals.php';
 include 'Pages/TransactionsHistory/transactions-history.php';
 include 'Pages/TreeStoreSell/tree-store-sell.php';
+include 'Pages/BuyYongTree/buy-yong-tree.php';
 
 Route::post('/test', [TestController::class, 'test']);
