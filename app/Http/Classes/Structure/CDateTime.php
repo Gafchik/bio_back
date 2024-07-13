@@ -321,6 +321,14 @@ final class CDateTime
         return (int)DateTimeClass::parse($startDate)->floorMinute()
             ->floatDiffInMinutes(DateTimeClass::parse($endDate)->floorMinute());
     }
+    public static function isDateEarlier(string $date1, string $date2): bool
+    {
+        $datetime1 = DateTimeClass::parse($date1);
+        $datetime2 = DateTimeClass::parse($date2);
+
+        // Сравниваем даты
+        return $datetime1->lt($datetime2);
+    }
 
     public static function getSeason(string $date)
     {

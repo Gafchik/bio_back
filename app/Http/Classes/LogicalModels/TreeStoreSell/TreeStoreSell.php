@@ -2,6 +2,7 @@
 
 namespace App\Http\Classes\LogicalModels\TreeStoreSell;
 
+use App\Http\Classes\Helpers\TransformArray\TransformArrayHelper;
 use App\Http\Classes\LogicalModels\TreeStoreSell\Exceptions\TreeOwnerException;
 use App\Http\Classes\Structure\Roles;
 use Illuminate\Support\Facades\Auth;
@@ -42,9 +43,6 @@ class TreeStoreSell
     {
         $user = Auth::user();
         $roles = $this->model->getRoles();
-//        if(in_array(Roles::INVESTORS,$roles)){
-//
-//        }
         $treeIds = array_column($data['trees'], 'id');
         $currentTrees = $this->model->getCurrenTrees($treeIds);
         $trees = [];
@@ -65,12 +63,28 @@ class TreeStoreSell
     }
     private function checkTreesOwner($user,array $currentTrees): void
     {
-        $ownerId = array_column($currentTrees, 'user_id');
+        $ownerId = array_unique(array_column($currentTrees, 'user_id'));
         if(count($ownerId)>1){
             throw new TreeOwnerException();
         }
         if($ownerId[0] !== $user->id){
             throw new TreeOwnerException();
         }
+    }
+    public function getTreeInSell(): array
+    {
+        return $this->model->getTreeInSell();
+    }
+    public function removeSell(array $data): void
+    {
+        $user = Auth::user();
+        $treeInSell = $this->model->getTreeInSell();
+        $treeIds = array_column($data['trees'], 'id');
+        $treeInSell = TransformArrayHelper::callbackSearchAllInArray(
+            array: $treeInSell,
+            callback: fn($t) =>  in_array($t['id'],$treeIds)
+        );
+        $treeIds = array_column($treeInSell, 'id');
+        $this->model->removeSell($treeInSell,$treeIds);
     }
 }

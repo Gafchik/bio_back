@@ -43,4 +43,23 @@ class TreeStoreSellController extends BaseController
             return $this->makeBadResponse($e);
         }
     }
+    public function getTreeInSell(): JsonResponse
+    {
+        return $this->makeGoodResponse(
+            $this->model->getTreeInSell()
+        );
+    }
+    public function removeSell(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'trees' => ['required','array'],
+            'trees.*.id' => ['required','integer'],
+        ]);
+        try {
+            $this->model->removeSell($validated);
+            return $this->makeGoodResponse([]);
+        }catch (BaseException $e){
+            return $this->makeBadResponse($e);
+        }
+    }
 }

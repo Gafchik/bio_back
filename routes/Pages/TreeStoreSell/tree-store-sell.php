@@ -15,7 +15,9 @@ Route::group(
     function () {
         Route::post('/get-position', [TreeStoreSellController::class, 'getPosition']);;
         Route::post('/sell', [TreeStoreSellController::class, 'sell'])
-            ;
-//            ->middleware(Google2FaMiddleware::class);
+            ->middleware(Google2FaMiddleware::class);
+        Route::post('/remove-sell', [TreeStoreSellController::class, 'removeSell'])
+            ->middleware(Google2FaMiddleware::class);
+        Route::post('/get-tree-in-sell',[TreeStoreSellController::class, 'getTreeInSell']);
     }
 );
