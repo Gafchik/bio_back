@@ -12,6 +12,7 @@ Route::group(
         'prefix' => 'buy-yong-tree',
     ],
     function () {
-        Route::post('/get-start-info', [BuyYongTreeController::class, 'getStartInfo']);;
+        Route::post('/get-start-info', [BuyYongTreeController::class, 'getStartInfo']);
+        Route::post('/buy-balance', [BuyYongTreeController::class, 'buyBalance']);
     }
 );
