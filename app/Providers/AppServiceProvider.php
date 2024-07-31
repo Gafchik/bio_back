@@ -8,6 +8,8 @@ use App\Http\Classes\Core\BaseResponse\BaseResponse;
 use App\Http\Classes\Core\BaseResponse\BaseResponseInterface;
 use App\Http\Classes\Core\Pdf\PdfGenerator;
 use App\Http\Classes\Core\Pdf\PdfGeneratorInterface;
+use App\Http\Classes\Core\UserInfo\UserInfo;
+use App\Http\Classes\Core\UserInfo\UserInfoInterface;
 use App\Http\Classes\LogicalModels\Common\AvailableTree\AvailableTree;
 use App\Http\Classes\LogicalModels\Common\AvailableTree\AvailableTreeInterface;
 use App\Http\Classes\LogicalModels\Common\WorkWithPromo\WorkWithPromo;
@@ -36,6 +38,9 @@ class AppServiceProvider extends ServiceProvider
         //work_with_promo_facade
         $this->app->singleton(WorkWithPromoInterface::class, WorkWithPromo::class);
         $this->app->singleton('work_with_promo_facade', WorkWithPromoInterface::class);
+        //        api auth
+        $this->app->singleton(UserInfoInterface::class, UserInfo::class);
+        $this->app->singleton('user_info_facade', UserInfoInterface::class);
     }
 
     /**

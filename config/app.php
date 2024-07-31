@@ -168,6 +168,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\ServicesAPI\Acquiring\Stripe\StripeProvider::class,
 //        PragmaRX\Google2FAQRCode\Vendor\Laravel\ServiceProvider::class,
     ])->toArray(),
 

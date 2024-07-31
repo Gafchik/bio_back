@@ -38,4 +38,18 @@ class BuyYongTreeController extends BaseController
             return $this->makeBadResponse($e);
         }
     }
+    public function buyStripe(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'countTree' => ['required','int','min:1',],
+            'promo' => ['nullable','string',],
+            'success_url' => ['nullable','url',]
+        ]);
+        try {
+            $result = $this->model->buyStripe($validated);
+            return $this->makeGoodResponse($result);
+        }catch (BaseException $e){
+            return $this->makeBadResponse($e);
+        }
+    }
 }

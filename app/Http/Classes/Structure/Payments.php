@@ -13,4 +13,8 @@ final class Payments
         'id' => 15,
         'name' => 'stripe',
     ];
+    public const BALANCE = [
+        'id' => 1,
+        'name' => 'balance',
+    ];
 }

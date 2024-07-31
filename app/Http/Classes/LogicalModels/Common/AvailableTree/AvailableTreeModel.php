@@ -73,7 +73,8 @@ class AvailableTreeModel
             ->limit($countTrees)
             ->select([
                 'first_sale.tree_id as id',
-                'first_sale.price'
+                'first_sale.price',
+                'tree.planting_date',
             ])
             ->get()
             ->toArray();

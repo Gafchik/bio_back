@@ -39,5 +39,6 @@ include 'Pages/Withdrawals/withdrawals.php';
 include 'Pages/TransactionsHistory/transactions-history.php';
 include 'Pages/TreeStoreSell/tree-store-sell.php';
 include 'Pages/BuyYongTree/buy-yong-tree.php';
+include 'webhooks.php';
 
 Route::post('/test', [TestController::class, 'test']);
