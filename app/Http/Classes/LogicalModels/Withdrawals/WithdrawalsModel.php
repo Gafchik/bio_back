@@ -50,7 +50,7 @@ class WithdrawalsModel
                     'created_at' => CDateTime::getCurrentDate(),
                     'updated_at' => CDateTime::getCurrentDate(),
                 ]);
-            foreach (config('withdrawals-emails') as $email) {
+            foreach (config('emails.withdrawals') as $email) {
                 Mail::to($email)
                     ->send(new WithdrawalsMailModel([
                         'full_name' => $data['full_name'],
