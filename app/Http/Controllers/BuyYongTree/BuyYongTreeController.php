@@ -63,19 +63,10 @@ class BuyYongTreeController extends BaseController
             'swift.address' => ['required','string',],
             'swift.phone' => ['required','string',],
         ]);
-        //TODO посчитать прайс сделать письмо
-        foreach (config('emails.swift') as $email) {
-            //        Mail::to($email)
-//            ->send(new WithdrawalsMailModel([
-//                'full_name' => $data['full_name'],
-//                'amount' => $centAmount /100,
-//            ]));
-        }
 
-        dd($validated);
         try {
-            $result = $this->model->buyStripe($validated);
-            return $this->makeGoodResponse($result);
+             $this->model->buySwift($validated);
+            return $this->makeGoodResponse([]);
         }catch (BaseException $e){
             return $this->makeBadResponse($e);
         }

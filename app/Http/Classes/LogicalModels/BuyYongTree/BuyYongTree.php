@@ -13,6 +13,7 @@ use App\Http\Classes\Helpers\TransformArray\TransformArrayHelper;
 use App\Http\Facades\MongoLogFacade;
 use App\Http\Facades\WorkWithPromoFacade;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Stripe\Exception\InvalidRequestException;
 
 class BuyYongTree
@@ -119,5 +120,11 @@ class BuyYongTree
             'pay_url' => $stripeResponse['url'],
         ];
     }
-
+    public function buySwift(array $data): void
+    {
+        foreach (config('emails.swift') as $email) {
+            Mail::to($email)
+            ->send(new SwiftBuyYongTreeMailModel($data));
+        }
+    }
 }
