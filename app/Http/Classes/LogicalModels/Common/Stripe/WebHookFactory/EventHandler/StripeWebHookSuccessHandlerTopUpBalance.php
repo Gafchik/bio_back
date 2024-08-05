@@ -59,7 +59,7 @@ class StripeWebHookSuccessHandlerTopUpBalance extends StripeWebHookBaseHandler
     {
          $this->transactions
             ->insertGetId([
-                'wallet_id' => $user['walletLivePayId'],
+                'wallet_id' => $user['wallet_live_pay_id'],
                 'type' => TransactionTypes::TOP_UP_BALANCE,
                 'amount' => $invoice['amoute'],
                 'commission' => 0,
@@ -84,7 +84,7 @@ class StripeWebHookSuccessHandlerTopUpBalance extends StripeWebHookBaseHandler
     private function topUpBaseWallet(array $user, array $invoice): void
     {
         $this->wallets
-            ->where('id',$user['walletLivePayId'])
+            ->where('id',$user['wallet_live_pay_id'])
             ->update([
                 'balance' => DB::raw('balance + '.$invoice['amoute'])
             ]);
@@ -93,7 +93,7 @@ class StripeWebHookSuccessHandlerTopUpBalance extends StripeWebHookBaseHandler
     {
         $amoute = ($invoice['amoute'] / 110) * 144;
         $this->wallets
-            ->where('id',$user['walletFuturesPayId'])
+            ->where('id',$user['wallet_futures_id'])
             ->update([
                 'balance' => DB::raw('balance + '.$amoute)
             ]);

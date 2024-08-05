@@ -98,13 +98,13 @@ class StripeTypePaymentCheckoutService implements StripeTypePaymentCheckoutServi
                             'name' => $localeData['top_up_balance']['name'],
                             'description' => $localeData['top_up_balance']['destination'],
                         ],
-                        'unit_amount' => $data['topUpAmount'] * 100
+                        'unit_amount' => $data['top_up_amount'] * 100
                     ],
                     'quantity' => 1,
                 ]
             ],
             'mode' => 'payment',
-            'success_url' => $data['successUrl'] ?? $this->baseSuccessUrl,
+            'success_url' => $data['success_url'] ?? $this->baseSuccessUrl,
             'client_reference_id' => $emptyInvoiceId,
         ];
         if(!empty($user->email)){
