@@ -40,6 +40,7 @@ include 'Pages/TransactionsHistory/transactions-history.php';
 include 'Pages/TreeStoreSell/tree-store-sell.php';
 include 'Pages/BuyYongTree/buy-yong-tree.php';
 include 'Pages/TopUpWallets/top-up-wallets.php';
+include 'Pages/Store/store.php';
 include 'webhooks.php';
 
 Route::post('/test', [TestController::class, 'test']);
