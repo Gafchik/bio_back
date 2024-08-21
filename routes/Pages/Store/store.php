@@ -13,3 +13,15 @@ Route::group(
         Route::post('/get-tree-by-year', [StoreController::class, 'getTreeByYear']);
     }
 );
+Route::group(
+    [
+        'middleware' => [
+            'jwt.auth',
+            'user_middleware',
+        ],
+        'prefix' => 'tree-store',
+    ],
+    function () {
+        Route::post('/buy-from-basket', [StoreController::class, 'buyFromBasket']);
+    }
+);

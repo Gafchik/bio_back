@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Store;
 
+use App\Exceptions\BaseExceptions\BaseException;
 use App\Http\Classes\LogicalModels\Store\Store;
 use App\Http\Controllers\BaseControllers\BaseController;
 use Illuminate\Http\JsonResponse;
@@ -28,5 +29,18 @@ class StoreController extends BaseController
         return $this->makeGoodResponse(
             $this->model->getTreeByYear($validated)
         );
+    }
+    public function buyFromBasket(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'basket' => ['required', 'array'],
+            'basket.*.tree_id' => ['required', 'integer'],
+        ]);
+        try {
+            $result = $this->model->buyFromBasket($validated);
+        }catch (BaseException $exception){
+            return $this->makeBadResponse($exception);
+        }
+        return $this->makeGoodResponse($result);
     }
 }

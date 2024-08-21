@@ -70,10 +70,13 @@ class UserInfoModel
         foreach ($wallets as $wallet){
             if($wallet['type'] === WalletsType::LIVE_PAY){
                 $user['wallet_live_pay_id'] = $wallet['id'];
+                $user['wallet_live_pay_balance'] = $wallet['balance'];
             }else if($wallet['type'] === WalletsType::BONUS){
                 $user['wallet_bonus_id'] = $wallet['id'];
+                $user['wallet_bonus_balance'] = $wallet['balance'];
             }else if($wallet['type'] === WalletsType::FUTURES){
                 $user['wallet_futures_id'] = $wallet['id'];
+                $user['wallet_futures_balance'] = $wallet['balance'];
             }
         }
         return $user;
@@ -113,6 +116,7 @@ class UserInfoModel
             ->select([
                 'id',
                 'type',
+                'balance',
             ])
             ->get()
             ->toArray();
