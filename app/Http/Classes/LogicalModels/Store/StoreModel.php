@@ -5,6 +5,7 @@ namespace App\Http\Classes\LogicalModels\Store;
 use App\Http\Classes\LogicalModels\Store\Exceptions\ErrorTransactionBuyShop;
 use App\Http\Classes\Structure\CDateTime;
 use App\Http\Classes\Structure\TransactionTypes;
+use App\Http\Facades\UserInfoFacade;
 use App\Models\MySql\Biodeposit\Trees;
 use App\Models\MySql\Biodeposit\Trees_on_sale;
 use App\Models\MySql\Biodeposit\Wallets;
@@ -103,7 +104,7 @@ class StoreModel
     }
     public function buyFromBasket(array $trees, array $transactionData, array $user): void
     {
-        //TODO узнать куда идет коммисия
+        $treeIds = [];
         $this->trees->getConnection()->beginTransaction();
         try {
             //списуем с баланса у покупателя
@@ -142,7 +143,11 @@ class StoreModel
                     ]);
                 //начисляем деньги продавцу
                 $this->workWithOwnerTree($tree,$amount,$commission);
+                //начисляем коммиссию суперюзеру
+                $this->workSuperUser($tree,$commission);
+                $treeIds[] = $tree->tree_id;
             }
+            $this->deleteFromShop($treeIds);
             $this->trees->getConnection()->commit();
         }catch (\Throwable $e){
             $this->trees->getConnection()->rollBack();
@@ -183,6 +188,37 @@ class StoreModel
             'created_at' => CDateTime::getCurrentDate(),
             'updated_at' => CDateTime::getCurrentDate(),
         ]);
+    }
+    private function workSuperUser(
+        $tree,
+        int $commission
+    ): void
+    {
+        $superUser = UserInfoFacade::getUserInfo(id:1);
+        $this->wallets
+            ->where('id', $superUser['wallet_live_pay_id'])
+            ->update([
+                'balance' => $superUser['wallet_live_pay_balance'] + $commission,
+            ]);
+        $this->transactions->insert([
+            'amount' => $commission,
+            'commission' => 0,
+            'total' => $commission,
+            'type' => TransactionTypes::SELL,
+            'wallet_id' => $superUser['wallet_live_pay_id'],
+            'data' => '['.$tree->tree_id.']',
+            'tree_count' => 1,
+            'status' => 1,
+            'created_at' => CDateTime::getCurrentDate(),
+            'updated_at' => CDateTime::getCurrentDate(),
+            'message' => 'commission'
+        ]);
+    }
+    private function deleteFromShop(array $treeIds): void
+    {
+        $this->treesOnSale
+            ->whereIn('tree_id', $treeIds)
+            ->delete();
     }
 }
 

@@ -46,11 +46,12 @@ class Users extends Authenticatable implements JWTSubject
     {
         return [];
     }
-    protected function google2faSecret(): Attribute
-    {
-        return new Attribute(
-            get: fn ($value) =>  decrypt($value),
-            set: fn ($value) =>  encrypt($value),
-        );
-    }
+    //старые ключи шифрования не работает хрень
+//    protected function google2faSecret(): Attribute
+//    {
+//        return new Attribute(
+//            get: fn ($value) =>  decrypt($value),
+//            set: fn ($value) =>  encrypt($value),
+//        );
+//    }
 }

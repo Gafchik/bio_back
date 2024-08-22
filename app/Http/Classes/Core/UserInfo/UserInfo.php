@@ -23,16 +23,10 @@ class UserInfo implements UserInfoInterface
     ): array
     {
         if(!is_null($uuid)){
-            return $this->model->getUserInfo($uuid);
+            return $this->model->getUserInfo(uuid: $uuid);
         }
         if(!is_null($id)){
-            $uuidFromDb = $this->model->getUuidBuyId($id);
-            $uuid = !empty($uuidFromDb)
-                ? $uuidFromDb
-                : null;
-            return !is_null($uuid)
-                ? $this->model->getUserInfo($uuid)
-                : [];
+            return $this->model->getUserInfo(id:$id);
         }
         return [];
     }

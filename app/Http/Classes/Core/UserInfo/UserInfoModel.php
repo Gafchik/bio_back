@@ -28,14 +28,19 @@ class UserInfoModel
     {
         return $this->userModel
             ->where('id',$id)
-            ->pluck('uuid')
-            ->first();
+            ->first()
+            ?->value('uuid');
     }
-    public function getUserInfo(string $uuid): array
+    public function getUserInfo(?string $uuid = null, ?int $id = null): array
     {
-        $user = $this->getBaseUserQuery()
-            ->where('userModel.uuid',$uuid)
-            ->select([
+        $query = $this->getBaseUserQuery();
+        if(!!$uuid){
+            $query->where('userModel.uuid',$uuid);
+        }
+        if(!!$id){
+            $query->where('userModel.id',$id);
+        }
+        $query->select([
                 'userModel.id',
                 'userModel.uuid',
                 'userModel.email',
@@ -47,7 +52,6 @@ class UserInfoModel
                 'userModel.deleted_at',
                 'userModel.deleted_email',
                 'userModel.enable_2_fact',
-                'userModel.google2fa_secret',
                 'userModel.is_active_user',
                 'userInfo.first_name',
                 'userInfo.last_name',
@@ -59,10 +63,10 @@ class UserInfoModel
                 'userInfo.updated_at',
                 'userInfo.codePromo',
                 'userInfo.level',
-            ])
-            ->first()
-            ->toArray();
-
+                'userModel.google2fa_secret',
+            ]);
+        $user = $query->first()
+            ?->toArray();
         $user['demo_balance'] = $this->getDemoBalance($user['id']);
         $user['trees'] = $this->getUserTress($user['id']);
 
