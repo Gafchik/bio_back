@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Store\StoreController;
+use App\Http\Middleware\Google2FaMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -22,6 +23,7 @@ Route::group(
         'prefix' => 'tree-store',
     ],
     function () {
-        Route::post('/buy-from-basket', [StoreController::class, 'buyFromBasket']);
+        Route::post('/buy-from-basket', [StoreController::class, 'buyFromBasket'])
+            ->middleware(Google2FaMiddleware::class);;
     }
 );

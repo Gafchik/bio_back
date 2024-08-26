@@ -20,7 +20,7 @@ class Google2FaMiddleware
         }
         $google2fa = new Google2FA();
         $google2fa_secret = Auth::user()->google2fa_secret;
-        if(!$google2fa->verifyKey($google2fa_secret,$request['twoFaCod'])){
+        if(!$google2fa->verifyKey(decrypt($google2fa_secret),$request['twoFaCod'])){
             return ResponseFacade::makeBadResponse(new Incorrect2Fa());
         }
         return $next($request);

@@ -39,7 +39,7 @@ class Store
             ];
         }
         $transactionData = $this->prepareTransactionData($treesInStore,$user);
-        if($user['wallet_live_pay_balance'] > $transactionData['total']){
+        if($user['wallet_live_pay_balance'] < $transactionData['total']){
             throw new NoMoneyException();
         }
         $this->model->buyFromBasket($treesInStore,$transactionData,$user);
