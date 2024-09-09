@@ -42,6 +42,7 @@ include 'Pages/BuyYongTree/buy-yong-tree.php';
 include 'Pages/TopUpWallets/top-up-wallets.php';
 include 'Pages/Store/store.php';
 include 'Pages/Insurance/insurance.php';
+include 'Pages/Gift/gift.php';
 include 'webhooks.php';
 
 Route::post('/test', [TestController::class, 'test']);
