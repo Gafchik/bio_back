@@ -2,8 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Exceptions\Middleware\Google2Fa\Empty2Fa;
-use App\Exceptions\Middleware\Google2Fa\Incorrect2Fa;
+use App\Exceptions\Middleware\Google2Fa\{
+    Empty2Fa,
+    Incorrect2Fa,
+    NotEnable2Fa,
+};
 use App\Http\Facades\ResponseFacade;
 use Closure;
 use Illuminate\Http\Request;
@@ -15,6 +18,9 @@ class Google2FaMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
+        if(!Auth::user()->enable_2_fact){
+            return ResponseFacade::makeBadResponse(new NotEnable2Fa());
+        }
         if(empty($request['twoFaCod'])){
             return ResponseFacade::makeBadResponse(new Empty2Fa());
         }
