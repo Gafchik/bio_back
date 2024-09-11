@@ -110,22 +110,17 @@ class GiftModel
                         $currentDate = Carbon::today();
                         $notifyDate = Carbon::createFromFormat('Y/m/d', $data['notifyDate']);
                         if ($notifyDate->isSameDay($currentDate)) {
-                            $this->sendMail($data['email'], $giftUuid);
+                            $this->sendMail($data['email'], $giftUuid,$giftId);
                         }
                     } else {
-                        $this->sendMail($data['email'], $giftUuid);
+                        $this->sendMail($data['email'], $giftUuid,$giftId);
                     }
-                    $this->gifts->where('id', $giftId)
-                        ->update([
-                            'is_notification' => true,
-                            'updated_at' => CDateTime::getCurrentDate(),
-                        ]);
                 }
             });
         return $giftUuid;
     }
 
-    private function sendMail(string $email, string $code): void
+    private function sendMail(string $email, string $code, int $giftId): void
     {
         Mail::to($email)
             ->send(new NotificationGiftMailModel([
@@ -133,6 +128,11 @@ class GiftModel
                 'activationCode' => $code,
                 'locale' => app()->getLocale(),
             ]));
+        $this->gifts->where('id', $giftId)
+            ->update([
+                'is_notification' => true,
+                'updated_at' => CDateTime::getCurrentDate(),
+            ]);
     }
 
     public function getGiftInfo(): array

@@ -20,6 +20,7 @@ class NotificationGiftMailModel  extends Mailable
     }
     public function build(): Mailable
     {
+        app()->setLocale($this->data['locale']);
         $subject = Lang::get(self::LANG_PATH.'.subject');
         return $this->subject($subject)
             ->view(self::VIEW_PATH, $this->data);
