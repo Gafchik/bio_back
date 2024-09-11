@@ -12,5 +12,9 @@ Route::group(
     ],
     function () {
         Route::post('/create-gift', [GiftController::class, 'createGift']);
+        Route::post('/get-gift-info', [GiftController::class, 'getGiftInfo']);
+        Route::post('/cancel-my-gift', [GiftController::class, 'cancelMyGift']);
+        Route::post('/download-gift-certificate', [GiftController::class, 'downloadGiftCertificate']);
+        Route::post('/get-gift-by-code', [GiftController::class, 'getGiftByCode']);
     }
 );
