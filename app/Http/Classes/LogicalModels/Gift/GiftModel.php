@@ -162,6 +162,7 @@ class GiftModel
                 'g.email as user_to',
                 'g.code',
                 'g.status',
+                'g.notification_date',
                 't.tree_count',
             ])
             ->selectRaw("if(g.from_user_id = ?,1,0) as i_gave", [$user['id']])

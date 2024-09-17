@@ -3,6 +3,7 @@
 namespace App\Http\Classes\LogicalModels\Gift;
 
 use App\Http\Classes\LogicalModels\Gift\Exceptions\GiftNotFoundException;
+use App\Http\Classes\Structure\CDateTime;
 
 class Gift
 {
@@ -16,7 +17,12 @@ class Gift
     }
     public function getGiftInfo(): array
     {
-        return $this->model->getGiftInfo();
+        $result = $this->model->getGiftInfo();
+        $result = array_values(array_filter($result, fn($item) => !!$item['i_gave']
+            || is_null($item['notification_date'])
+            || CDateTime::convertDateToDateFormat($item['notification_date'],CDateTime::DATETIME_FORMAT_DB) <= CDateTime::getCurrentDate()
+        ));
+        return$result;
     }
     public function cancelMyGift(int $giftId): void
     {
